@@ -1,50 +1,50 @@
-/************ SEG3 *****¤C¬qÅã¥Ü¾¹½d¨Ò**********************
-*°Ê§@¡G¥Ñ¥|¦ì¼Æ¤C¬qÅã¥Ü¾¹Åã¥Ü¹q¤lÄÁªº®É¡B¤À¤Î¬í¬°°{Ã{
-*      ¡A«öKEY1½Õ®É¡A«öKEY2½Õ¤À
-*±µ½u¡GPC0~6-->JP7(a~g)¡APC7-->JP8(dps)¡APC10~13-->JP8(C1~C4)
-*      PD11~12-->JP24(0~1)¡AGND-->JP24(4)
+/************ SEG3 *****�C�q��ܾ��d��**********************
+*�ʧ@�G�ѥ|��ƤC�q��ܾ���ܹq�l�����ɡB���ά����{�{
+*      �A��KEY1�ծɡA��KEY2�դ�
+*���u�GPC0~6-->JP7(a~g)�APC7-->JP8(dps)�APC10~13-->JP8(C1~C4)
+*      PD11~12-->JP24(0~1)�AGND-->JP24(4)
 ************************************************************/
-#include "config.h"  // ²ÕºA¤Î¼È¦s¾¹³]©w 
+#include "config.h"  // �պA�μȦs���]�w 
 
 #define F 6000
 #define T 600
 #define STOP1 300
 
-void Display(void); //¥|¦ì¼Æ¤C¬qÅã¥Ü¾¹±½´y
-int8 hor=23,min=2,sec=18; //³]©w®É¡B¤À¡B¬í®É¶¡
+void Display(void); //�|��ƤC�q��ܾ����y
+int8 hor=23,min=2,sec=18; //�]�w�ɡB���B���ɶ�
 
 void beep(u8 i)
 {
-  u16  j,dly;		//Buzzer¤Ï¬Û¦¸¼Æ
-  while(i--)   	//¹ÍÁn¦¸¼Æ
+  u16  j,dly;		//Buzzer�Ϭۦ���
+  while(i--)   	//���n����
    {
-     for(j=0;j<T;j++) //¿é¥X¤Ï¬Û¦¸¼Æ¡A¨M©w­µªø
+     for(j=0;j<T;j++) //��X�Ϭۦ��ơA�M�w����
       {		
-				while(KEY1_0) Buzzer_0; //­Y«öKEY1Áä¡A¸Á»ï¾¹°±¤î
-				Buzzer_T; 							//Buzzer¤Ï¬Û,¥O¸Á»ï¾¹µo¥XÁn­µ
-				dly=F; while(dly--);		//­µÀW©µ®É
+				while(KEY1_0) Buzzer_0; //�Y��KEY1��A���ﾹ����
+				Buzzer_T; 							//Buzzer�Ϭ�,�O���ﾹ�o�X�n��
+				dly=F; while(dly--);		//���W����
       }
-	  Buzzer_0; Delay_ms(STOP1);	//¸Á»ï¾¹°±¤î¡A¹ÍÁnªº¶¡¹j®É¶¡
+	  Buzzer_0; Delay_ms(STOP1);	//���ﾹ����A���n�����j�ɶ�
   }
 }
 
 int main(void) 
 {
 	bool countDown = 0;
-  SEG_DIR;        	 //³]©wSEG±µ¸}¬°¿é¥X
-	KEY1_DIR; KEY2_DIR; KEY3_DIR;//³]©wKEY±µ¸}¬°¿é¤J
+  SEG_DIR;        	 //�]�wSEG���}����X
+	KEY1_DIR; KEY2_DIR; KEY3_DIR;//�]�wKEY���}����J
 	Buzzer_DIR;
   while(1)
   {
 		if(KEY2_0){
-			sec--;  //«öKEY2½Õsec  
+			sec--;  //��KEY2��sec  
 			if(sec<0) {
 				min--;
 				sec=59;
 			}
 		}
 		if(KEY1_0){ 
-			min--;  //«öKEY1½Õmin
+			min--;  //��KEY1��min
 			if(min<0) {
 				hor--;
 				min=59;				
@@ -53,41 +53,41 @@ int main(void)
 		if(KEY3_0) 
 			countDown=~countDown; 
 		
-		Display(); //¤C¬qÅã¥Ü¾¹Åã¥Ü®É¶¡
+		Display(); //�C�q��ܾ���ܮɶ�
 		
 		if(countDown){
 			if(sec+min*60 == 135){
 				countDown = 0;
-				beep(1);        //¹Í¤@Án
-				Buzzer_0; Delay_ms(STOP1); //¸Á»ï¾¹°±¤î¡A¶¡¹j®É¶¡
+				beep(1);        //�ͤ@�n
+				Buzzer_0; Delay_ms(STOP1); //���ﾹ����A���j�ɶ�
 			}
-			sec--;               //¬í¥[¤@
-			if (sec >= 0) continue; //­Y¬í¤p©ó60¡A±qÀY°õ¦æ   
-				sec=59; min--;        //¬íµ¥©ó60«h¥O¬í=0¡A¤À¥[¤@
-			if (min >= 0) continue; //­Y¤À¤p©ó60¡A±qÀY°õ¦æ    
-				min=59; hor--;        //­Y¤Àµ¥©ó60«h¥O¤À=0¡A®É¥[¤@
-			if (hor >= 0) continue; //­Y®É¤p©ó24¡A±qÀY°õ¦æ 
-				hor=0; min=0; sec=0; //­Y®Éµ¥©ó24«h¥O®É¡B¤À¡B¬í=0
+			sec--;               //���[�@
+			if (sec >= 0) continue; //�Y���p��60�A�q�Y����   
+				sec=59; min--;        //������60�h�O��=0�A���[�@
+			if (min >= 0) continue; //�Y���p��60�A�q�Y����    
+				min=59; hor--;        //�Y������60�h�O��=0�A�ɥ[�@
+			if (hor >= 0) continue; //�Y�ɤp��24�A�q�Y���� 
+				hor=0; min=0; sec=0; //�Y�ɵ���24�h�O�ɡB���B��=0
 		}
    }
  }	 
 //***************************************************	 
-void Display(void)  //¥|¦ì¼Æ¤C¬qÅã¥Ü¾¹±½´y	 
+void Display(void)  //�|��ƤC�q��ܾ����y	 
 {  
-  u8 scan=100;     //¤C¬qÅã¥Ü¾¹±½´y¦¸¼Æ¡A¨M®É©µ®É®É¶¡
-	while(scan--)    //­«ÂÐ±½´y¦¸¼Æ 
+  u8 scan=100;     //�C�q��ܾ����y���ơA�M�ɩ��ɮɶ�
+	while(scan--)    //���б��y���� 
     {
-			SEG_Data=SEG_Table[min/10];//®É¤Q¦ì¼Æ¿é¥X
-      SEG_C1; Delay_ms(1); 			 //¿ï¾Ü¤d¦ì¼ÆÅã¥Ü¾¹ 
+			SEG_Data=SEG_Table[min/10];//�ɤQ��ƿ�X
+      SEG_C1; Delay_ms(1); 			 //��ܤd�����ܾ� 
 
-      if(scan<100) 	SEG_Data=SEG_Table[min%10];//®É­Ó¼Æ¿é¥X
-				else SEG_Data=SEG_Table[min%10]|0x80;//®É­Ó¼Æ¿é¥X+¬í«G
-      SEG_C2; Delay_ms(1); 			 //¿ï¾Ü¦Ê¦ì¼ÆÅã¥Ü¾¹ 
+      if(scan<100) 	SEG_Data=SEG_Table[min%10];//�ɭӼƿ�X
+				else SEG_Data=SEG_Table[min%10]|0x80;//�ɭӼƿ�X+���G
+      SEG_C2; Delay_ms(1); 			 //��ܦʦ����ܾ� 
 			
-			SEG_Data=SEG_Table[sec/10];//¤À¤Q¦ì¼Æ¿é¥X
-      SEG_C3;  Delay_ms(1);      //¿ï¾Ü¤Q¦ì¼ÆÅã¥Ü¾¹			 
+			SEG_Data=SEG_Table[sec/10];//���Q��ƿ�X
+      SEG_C3;  Delay_ms(1);      //��ܤQ�����ܾ�			 
 			 
-			SEG_Data=SEG_Table[sec%10];//¤À­Ó¦ì¼Æ¿é¥X
-      SEG_C4; Delay_ms(1);    	 //¿ï¾Ü­Ó¦ì¼ÆÅã¥Ü¾¹
+			SEG_Data=SEG_Table[sec%10];//���Ӧ�ƿ�X
+      SEG_C4; Delay_ms(1);    	 //��ܭӦ����ܾ�
     }	   
 }
